@@ -1,0 +1,833 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Meiryo', 'MS PGothic', sans-serif;
+  background: #e8f4f8;
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+header {
+  background: #4a90e2;
+  color: white;
+  padding: 0;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 20px;
+  position: relative;
+}
+
+header h1 {
+  font-size: 2em;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.hamburger-menu {
+  position: absolute;
+  right: 20px;
+}
+
+.hamburger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.hamburger-menu span {
+  width: 100%;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(8px, -8px);
+}
+
+.nav-menu {
+  display: none;
+  background: #357abd;
+  padding: 0;
+  border-top: 1px solid #2a5f8f;
+  border-radius: 0 0 5px 5px;
+}
+
+.nav-menu.active {
+  display: block;
+}
+
+.nav-menu-link {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 15px 20px;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #555;
+}
+
+.nav-menu-link:last-child {
+  border-bottom: none;
+}
+
+.nav-menu-link:hover {
+  background: #2a5f8f;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+h2 {
+  color: #4a90e2;
+  font-size: 1.8em;
+  margin-bottom: 25px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #4a90e2;
+}
+
+h3 {
+  color: #555;
+  font-size: 1.3em;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+p {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+button {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #357abd;
+}
+
+button:active {
+  background: #2a5f8f;
+}
+
+/* 利用目的ボタンのスタイル */
+#purposeTournament,
+#purposeOther {
+  background: white;
+  color: #333;
+  border: 2px solid #333;
+  box-shadow: none;
+}
+
+#purposeTournament:hover,
+#purposeOther:hover {
+  background: #f5f5f5;
+  transform: none;
+  box-shadow: none;
+}
+
+#purposeTournament.selected,
+#purposeOther.selected {
+  background: #4a90e2;
+  color: white;
+  border: 2px solid #4a90e2;
+}
+
+input[type="text"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#responsiblePerson {
+  width: 200px;
+  max-width: 200px;
+}
+
+#numberOfPeople {
+  width: 150px;
+  max-width: 150px;
+}
+
+.required {
+  background-color: red;
+  color: white;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 0.8em;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+.unit {
+  margin-left: 8px;
+  font-size: 1em;
+  color: #333;
+}
+
+.submit-section {
+  margin-top: 30px;
+  text-align: center;
+  padding: 15px 0;
+}
+
+#confirmButton {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+#confirmButton:hover {
+  background: #357abd;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: 5px;
+  max-width: 600px;
+  border: 1px solid #ddd;
+}
+
+.modal-content h2 {
+  color: #4a90e2;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #4a90e2;
+  padding-bottom: 8px;
+}
+
+.modal-content p {
+  margin: 15px 0;
+  line-height: 1.8;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 12px 24px;
+}
+
+#cancelButton {
+  background: #ccc;
+  color: #333;
+}
+
+#cancelButton:hover {
+  background: #bbb;
+}
+
+/* 予約確認ページのスタイル */
+.nav-buttons {
+  margin-bottom: 20px;
+}
+
+.nav-link {
+  display: inline-block;
+  background: #333;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 0.95em;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background: #555;
+}
+
+.reservation-list {
+  margin-top: 20px;
+}
+
+.no-reservations {
+  text-align: center;
+  color: #666;
+  font-size: 1em;
+  padding: 30px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.reservation-date-group {
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.reservation-date-group h3 {
+  color: #4a90e2;
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #4a90e2;
+}
+
+.reservation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+.reservation-item:hover {
+  background: #f0f0f0;
+}
+
+.reservation-info {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.reservation-info p {
+  margin: 0;
+  line-height: 1.5;
+  color: #333;
+  font-size: 0.95em;
+}
+
+.reservation-info strong {
+  color: #555;
+  margin-right: 5px;
+}
+
+.cancel-reservation-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-left: 20px;
+  white-space: nowrap;
+}
+
+.cancel-reservation-btn:hover {
+  background: #cc0000;
+}
+
+.cancel-reservation-btn:active {
+  background: #aa0000;
+}
+
+
+input[type="date"] {
+  max-width: 150px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* カレンダーアイコンを非表示 */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  resize: none;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+div {
+  margin: 15px 0;
+}
+
+.date-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+#prevDay,
+#nextDay {
+  max-width: 100px;
+}
+
+section {
+  margin-top: 40px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+thead {
+  background: #4a90e2;
+  color: white;
+}
+
+th {
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: #f8f9ff;
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+td {
+  padding: 12px;
+  text-align: center;
+}
+
+td:first-child {
+  font-weight: 600;
+  color: #555;
+  background-color: #f8f9ff;
+  width: 150px;
+}
+
+.reservation-cell {
+  text-align: center;
+  cursor: pointer;
+  height: 50px;
+  vertical-align: middle;
+  position: relative;
+  line-height: 50px;
+  transition: background-color 0.2s ease;
+}
+
+.reservation-cell:hover {
+  background-color: #f0f0f0;
+}
+
+.reservation-cell.available::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ff4444;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.reservation-cell.reserved {
+  background-color: #ffe4cc;
+}
+
+.reservation-cell.reserved::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ff4444;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.reservation-cell.confirmed {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.reservation-cell.confirmed:hover {
+  background-color: #b3b3b3;
+}
+
+.reservation-cell.confirmed::before {
+  content: '×';
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+  border: none;
+  width: auto;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  main {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  header {
+    margin-bottom: 20px;
+  }
+
+  .header-content {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 1.5em;
+  }
+
+  .hamburger-menu {
+    width: 25px;
+    height: 25px;
+  }
+
+  h2 {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 14px 20px;
+    font-size: 0.95em;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    /* iOSでズームを防ぐ */
+  }
+
+  input[type="date"] {
+    max-width: 150px;
+    padding: 14px;
+    font-size: 16px;
+    /* iOSでズームを防ぐ */
+  }
+
+  #responsiblePerson {
+    width: 200px;
+    max-width: 200px;
+  }
+
+  #numberOfPeople {
+    width: 150px;
+    max-width: 150px;
+  }
+
+  .date-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #prevDay,
+  #nextDay {
+    max-width: 100px;
+    width: auto;
+  }
+
+  section {
+    margin-top: 30px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    font-size: 0.9em;
+    min-width: 100%;
+  }
+
+  th {
+    padding: 12px 8px;
+    font-size: 0.95em;
+  }
+
+  td {
+    padding: 10px 8px;
+  }
+
+  td:first-child {
+    width: 120px;
+    font-size: 0.9em;
+  }
+
+  .reservation-cell {
+    height: 45px;
+    line-height: 45px;
+  }
+
+  .reservation-cell.available::before,
+  .reservation-cell.reserved::before {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+
+  .reservation-cell.confirmed::before {
+    font-size: 20px;
+  }
+
+  .submit-section {
+    margin-top: 30px;
+    padding: 15px 0;
+  }
+
+  #confirmButton {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1em;
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    margin: 5px 0;
+  }
+
+  .modal-content {
+    margin: 5% auto;
+    padding: 20px;
+    max-width: 95%;
+  }
+
+  .modal-content h2 {
+    font-size: 1.3em;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+  }
+
+  .reservation-date-group {
+    padding: 15px;
+  }
+
+  .reservation-date-group h3 {
+    font-size: 1.1em;
+  }
+
+  .reservation-item {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .reservation-info {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .reservation-info p {
+    font-size: 0.9em;
+    margin: 0;
+  }
+
+  .reservation-info strong {
+    margin-right: 5px;
+    font-size: 0.9em;
+  }
+
+  .cancel-reservation-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 12px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 5px;
+    font-size: 13px;
+  }
+
+  main {
+    padding: 10px;
+  }
+
+  header {
+    padding: 15px 10px;
+  }
+
+  header h1 {
+    font-size: 1.3em;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  h3 {
+    font-size: 1em;
+  }
+
+  table {
+    font-size: 0.85em;
+  }
+
+  th {
+    padding: 10px 6px;
+    font-size: 0.9em;
+  }
+
+  td {
+    padding: 8px 6px;
+  }
+
+  td:first-child {
+    width: 100px;
+    font-size: 0.85em;
+  }
+
+  .reservation-cell {
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .reservation-cell.available::before,
+  .reservation-cell.reserved::before {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  .reservation-cell.confirmed::before {
+    font-size: 18px;
+  }
+}

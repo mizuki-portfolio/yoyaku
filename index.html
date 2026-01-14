@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>体育館予約サイト</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <h1>○○体育館</h1>
+      <button class="hamburger-menu" id="hamburgerMenu" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <nav class="nav-menu" id="navMenu">
+      <a href="reservations.html" class="nav-menu-link">予約確認ページへ</a>
+    </nav>
+  </header>
+  <main>
+    <h2>予約内容入力</h2>
+
+    <h3>利用目的<span class="required">必須</span></h3>
+    <button id="purposeTournament">大会</button>
+    <button id="purposeOther">大会以外</button>
+
+    <h3>利用目的詳細<span class="required">必須</span></h3>
+    <p>大会の場合は大会名、大会以外の場合は具体的な使用内容を入力してください。</p>
+    <textarea id="purposeDetail"></textarea>
+
+    <h3>予約日<span class="required">必須</span></h3>
+    <input type="date" id="clander">
+    <div class="date-buttons">
+      <button id="prevDay">前の日</button>
+      <button id="nextDay">次の日</button>
+    </div>
+
+    <section>
+      <table id="reservationTable">
+        <thead>
+          <tr>
+            <th>時間</th>
+            <th>Aコート</th>
+            <th>Bコート</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </section>
+
+    <h3>使用責任者<span class="required">必須</span></h3>
+    <input type="text" id="responsiblePerson">
+
+    <h3>使用人数<span class="required">必須</span></h3>
+    <input type="text" id="numberOfPeople"><span class="unit">人</span>
+
+    <div class="submit-section">
+      <button id="confirmButton">確認</button>
+    </div>
+
+    <div id="confirmationModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h2>予約内容の確認</h2>
+        <div id="confirmationDetails"></div>
+        <div class="modal-buttons">
+          <button id="submitButton">送信</button>
+          <button id="cancelButton">キャンセル</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="main.js"></script>
+</body>
+
+</html>
