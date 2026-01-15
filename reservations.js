@@ -1,5 +1,10 @@
 'use strict';
 
+// ログインチェック
+if (!isLoggedIn()) {
+  window.location.href = 'login.html';
+}
+
 // すべての予約データを取得
 function getAllReservations() {
   const allReservations = [];
@@ -14,7 +19,8 @@ function getAllReservations() {
         if (data && data.confirmedReservations) {
           // 確認済みの予約を取得
           for (const reservationKey in data.confirmedReservations) {
-            if (data.confirmedReservations[reservationKey]) {
+            const reservation = data.confirmedReservations[reservationKey];
+            if (reservation) {
               const [hour, court] = reservationKey.split('-');
               allReservations.push({
                 date: date,
@@ -23,6 +29,7 @@ function getAllReservations() {
                 purpose: data.purpose || '',
                 purposeDetail: data.purposeDetail || '',
                 responsiblePerson: data.responsiblePerson || '',
+                responsibleUserId: reservation.userId || data.responsibleUserId || '',
                 numberOfPeople: data.numberOfPeople || ''
               });
             }
@@ -60,17 +67,22 @@ function formatTime(hour) {
 
 // 予約一覧を表示
 function displayReservations() {
-  const reservations = getAllReservations();
+  const allReservations = getAllReservations();
+  const currentUserId = getCurrentUserId();
+  
+  // 自分の予約のみフィルタリング
+  const myReservations = allReservations.filter(res => res.responsibleUserId === currentUserId);
+  
   const listContainer = document.getElementById('reservationList');
   
-  if (reservations.length === 0) {
+  if (myReservations.length === 0) {
     listContainer.innerHTML = '<p class="no-reservations">予約がありません。</p>';
     return;
   }
   
   // 日付ごとにグループ化
   const groupedByDate = {};
-  reservations.forEach(res => {
+  myReservations.forEach(res => {
     if (!groupedByDate[res.date]) {
       groupedByDate[res.date] = [];
     }
@@ -83,6 +95,12 @@ function displayReservations() {
     html += `<h3>${formatDate(date)}</h3>`;
     
     groupedByDate[date].forEach((res, index) => {
+      const currentUserId = getCurrentUserId();
+      const isMyReservation = res.responsibleUserId === currentUserId;
+      const cancelButtonHtml = isMyReservation 
+        ? `<button class="cancel-reservation-btn" data-date="${res.date}" data-hour="${res.hour}" data-court="${res.court}">キャンセル</button>`
+        : '';
+      
       html += `
         <div class="reservation-item">
           <div class="reservation-info">
@@ -93,9 +111,7 @@ function displayReservations() {
             <p><strong>使用責任者:</strong> ${res.responsiblePerson}</p>
             <p><strong>使用人数:</strong> ${res.numberOfPeople}人</p>
           </div>
-          <button class="cancel-reservation-btn" data-date="${res.date}" data-hour="${res.hour}" data-court="${res.court}">
-            キャンセル
-          </button>
+          ${cancelButtonHtml}
         </div>
       `;
     });
@@ -124,6 +140,7 @@ function displayReservations() {
 function cancelReservation(date, hour, court) {
   const key = `reservation_${date}`;
   const savedData = localStorage.getItem(key);
+  const currentUserId = getCurrentUserId();
   
   if (!savedData) {
     return;
@@ -132,9 +149,17 @@ function cancelReservation(date, hour, court) {
   try {
     const reservationData = JSON.parse(savedData);
     const reservationKey = `${hour}-${court}`;
+    const reservation = reservationData.confirmedReservations[reservationKey];
+    
+    // 自分の予約かチェック
+    const reservationUserId = reservation?.userId || reservationData.responsibleUserId;
+    if (reservationUserId !== currentUserId) {
+      alert('他の使用責任者の予約はキャンセルできません。');
+      return;
+    }
     
     // 確認済みの予約から削除
-    if (reservationData.confirmedReservations && reservationData.confirmedReservations[reservationKey]) {
+    if (reservationData.confirmedReservations && reservation) {
       delete reservationData.confirmedReservations[reservationKey];
       
       // 確認済みの予約がすべてなくなった場合は、データを削除
@@ -184,8 +209,45 @@ function setupHamburgerMenu() {
   }
 }
 
+// ユーザー情報を表示
+function displayUserInfo() {
+  const currentUser = getLoggedInUser();
+  const userInfoDiv = document.getElementById('userInfo');
+  
+  if (currentUser && userInfoDiv) {
+    userInfoDiv.style.display = 'block';
+    document.getElementById('userNameDisplay').textContent = `ログイン中: ${currentUser.name}`;
+  }
+}
+
+// ログアウト処理
+function handleLogout() {
+  if (confirm('ログアウトしますか？')) {
+    logout();
+    window.location.href = 'login.html';
+  }
+}
+
 // ページ読み込み時に予約一覧を表示
 document.addEventListener('DOMContentLoaded', () => {
+  // ログインチェック
+  if (!isLoggedIn()) {
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  // ユーザー情報を表示
+  displayUserInfo();
+  
   displayReservations();
   setupHamburgerMenu();
+  
+  // ログアウトリンク
+  const logoutLink = document.getElementById('logoutLink');
+  if (logoutLink) {
+    logoutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleLogout();
+    });
+  }
 });

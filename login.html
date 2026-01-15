@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン - 体育館予約サイト</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <h1>○○体育館</h1>
+    </div>
+  </header>
+  <main>
+    <div class="login-container">
+      <h2>ログイン</h2>
+      
+      <div id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="loginName">使用責任者名</label>
+          <input type="text" id="loginName" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">パスワード</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <div class="form-buttons">
+          <button id="loginButton" type="button">ログイン</button>
+          <button id="showRegisterButton" type="button">新規登録</button>
+        </div>
+        <div id="loginError" class="error-message" style="display: none;"></div>
+      </div>
+
+      <div id="registerForm" class="auth-form" style="display: none;">
+        <h3>新規登録</h3>
+        <div class="form-group">
+          <label for="registerName">使用責任者名<span class="required">必須</span></label>
+          <input type="text" id="registerName" required>
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">パスワード<span class="required">必須</span></label>
+          <input type="password" id="registerPassword" required>
+          <small>パスワードは4文字以上で設定してください</small>
+        </div>
+        <div class="form-group">
+          <label for="registerPasswordConfirm">パスワード（確認）<span class="required">必須</span></label>
+          <input type="password" id="registerPasswordConfirm" required>
+        </div>
+        <div class="form-buttons">
+          <button id="registerButton" type="button">登録</button>
+          <button id="cancelRegisterButton" type="button">キャンセル</button>
+        </div>
+        <div id="registerError" class="error-message" style="display: none;"></div>
+      </div>
+    </div>
+  </main>
+  <script src="auth.js"></script>
+  <script src="login.js"></script>
+</body>
+
+</html>

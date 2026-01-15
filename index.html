@@ -20,14 +20,20 @@
     </div>
     <nav class="nav-menu" id="navMenu">
       <a href="reservations.html" class="nav-menu-link">予約確認ページへ</a>
+      <a href="#" class="nav-menu-link" id="logoutLink">ログアウト</a>
     </nav>
+    <div class="user-info" id="userInfo" style="display: none;">
+      <span id="userNameDisplay"></span>
+    </div>
   </header>
   <main>
     <h2>予約内容入力</h2>
 
     <h3>利用目的<span class="required">必須</span></h3>
-    <button id="purposeTournament">大会</button>
-    <button id="purposeOther">大会以外</button>
+    <div class="purpose-buttons">
+      <button id="purposeTournament">大会</button>
+      <button id="purposeOther">大会以外</button>
+    </div>
 
     <h3>利用目的詳細<span class="required">必須</span></h3>
     <p>大会の場合は大会名、大会以外の場合は具体的な使用内容を入力してください。</p>
@@ -55,10 +61,19 @@
     </section>
 
     <h3>使用責任者<span class="required">必須</span></h3>
-    <input type="text" id="responsiblePerson">
+    <div class="responsible-person-input">
+      <input type="text" id="responsiblePerson" placeholder="使用責任者名を入力">
+      <button id="fillResponsiblePerson" type="button" class="fill-button">登録者反映</button>
+    </div>
 
     <h3>使用人数<span class="required">必須</span></h3>
     <input type="text" id="numberOfPeople"><span class="unit">人</span>
+
+    <h3 id="feeHeading">使用料金</h3>
+    <div id="feeDisplay" class="fee-display">
+      <div class="fee-cards-container"></div>
+      <div class="fee-total">合計料金: <span id="totalFee">0</span>円</div>
+    </div>
 
     <div class="submit-section">
       <button id="confirmButton">確認</button>
@@ -75,6 +90,7 @@
       </div>
     </div>
   </main>
+  <script src="auth.js"></script>
   <script src="main.js"></script>
 </body>
 

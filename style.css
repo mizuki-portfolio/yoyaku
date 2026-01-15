@@ -10,6 +10,7 @@ body {
   min-height: 100vh;
   padding: 20px;
   color: #333;
+  font-size: 18px;
 }
 
 header {
@@ -30,7 +31,7 @@ header {
 }
 
 header h1 {
-  font-size: 2em;
+  font-size: 2.5em;
   font-weight: 600;
   margin: 0;
   text-align: center;
@@ -61,10 +62,11 @@ header h1 {
   border-radius: 3px;
   transition: all 0.3s ease;
   transform-origin: center;
+  display: block;
 }
 
 .hamburger-menu.active span:nth-child(1) {
-  transform: rotate(45deg) translate(8px, 8px);
+  transform: translateY(10px) rotate(45deg);
 }
 
 .hamburger-menu.active span:nth-child(2) {
@@ -72,7 +74,7 @@ header h1 {
 }
 
 .hamburger-menu.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(8px, -8px);
+  transform: translateY(-10px) rotate(-45deg);
 }
 
 .nav-menu {
@@ -108,31 +110,32 @@ main {
   max-width: 1200px;
   margin: 0 auto;
   background: white;
-  padding: 30px;
+  padding: 20px;
   border-radius: 5px;
   border: 1px solid #ddd;
 }
 
 h2 {
   color: #4a90e2;
-  font-size: 1.8em;
-  margin-bottom: 25px;
+  font-size: 2.2em;
+  margin-bottom: 20px;
   padding-bottom: 8px;
   border-bottom: 2px solid #4a90e2;
 }
 
 h3 {
   color: #555;
-  font-size: 1.3em;
-  margin-top: 25px;
-  margin-bottom: 15px;
+  font-size: 1.6em;
+  margin-top: 20px;
+  margin-bottom: 12px;
   font-weight: 600;
 }
 
 p {
   color: #666;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   line-height: 1.6;
+  font-size: 1.1em;
 }
 
 button {
@@ -142,7 +145,7 @@ button {
   padding: 10px 20px;
   margin: 5px;
   border-radius: 5px;
-  font-size: 1em;
+  font-size: 1.1em;
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-weight: 500;
@@ -157,12 +160,23 @@ button:active {
 }
 
 /* 利用目的ボタンのスタイル */
+.purpose-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 #purposeTournament,
 #purposeOther {
   background: white;
   color: #333;
   border: 2px solid #333;
   box-shadow: none;
+  flex: 1;
+  min-width: 150px;
+  max-width: 300px;
+  padding: 14px 20px;
+  font-size: 1.05em;
 }
 
 #purposeTournament:hover,
@@ -192,9 +206,37 @@ input[type="text"] {
   cursor: pointer;
 }
 
+.responsible-person-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 #responsiblePerson {
   width: 200px;
   max-width: 200px;
+}
+
+.fill-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.0em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.fill-button:hover {
+  background: #218838;
+}
+
+.fill-button:active {
+  background: #1e7e34;
 }
 
 #numberOfPeople {
@@ -207,15 +249,88 @@ input[type="text"] {
   color: white;
   padding: 2px 8px;
   margin-left: 8px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   border-radius: 4px;
   font-weight: normal;
 }
 
 .unit {
   margin-left: 8px;
-  font-size: 1em;
+  font-size: 1.1em;
   color: #333;
+}
+
+.fee-display {
+  margin: 12px 0;
+  padding: 0;
+}
+
+.fee-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.fee-card {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0 10px;
+}
+
+.fee-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fee-court-detail {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.fee-court-detail:last-child {
+  border-bottom: none;
+}
+
+.fee-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+  font-size: 1.1em;
+  margin: 0 5px;
+}
+
+.fee-label {
+  font-weight: 500;
+  color: #000;
+  font-size: 1.1em;
+}
+
+.fee-value {
+  font-weight: 600;
+  color: #000;
+  font-size: 1.1em;
+}
+
+.fee-total {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #000;
+  padding: 12px 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  text-align: right;
+  margin: 0 10px;
+}
+
+.fee-total span {
+  color: #000;
 }
 
 .submit-section {
@@ -229,7 +344,7 @@ input[type="text"] {
   color: white;
   border: none;
   padding: 12px 30px;
-  font-size: 1.1em;
+  font-size: 1.3em;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -266,11 +381,13 @@ input[type="text"] {
   margin-bottom: 20px;
   border-bottom: 2px solid #4a90e2;
   padding-bottom: 8px;
+  font-size: 2.0em;
 }
 
 .modal-content p {
   margin: 15px 0;
   line-height: 1.8;
+  font-size: 1.1em;
 }
 
 .modal-buttons {
@@ -306,7 +423,7 @@ input[type="text"] {
   text-decoration: none;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 0.95em;
+  font-size: 1.05em;
   transition: background-color 0.2s ease;
 }
 
@@ -369,7 +486,7 @@ input[type="text"] {
   margin: 0;
   line-height: 1.5;
   color: #333;
-  font-size: 0.95em;
+  font-size: 1.05em;
 }
 
 .reservation-info strong {
@@ -383,7 +500,7 @@ input[type="text"] {
   border: none;
   padding: 8px 16px;
   border-radius: 5px;
-  font-size: 0.9em;
+  font-size: 1.0em;
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-left: 20px;
@@ -405,7 +522,7 @@ input[type="date"] {
   margin: 10px 0;
   border: 2px solid #ddd;
   border-radius: 8px;
-  font-size: 1em;
+  font-size: 1.1em;
   transition: border-color 0.3s ease;
   font-family: inherit;
   cursor: pointer;
@@ -434,7 +551,7 @@ textarea {
   margin: 10px 0;
   border: 2px solid #ddd;
   border-radius: 8px;
-  font-size: 1em;
+  font-size: 1.1em;
   transition: border-color 0.3s ease;
   font-family: inherit;
   resize: none;
@@ -449,7 +566,7 @@ textarea:focus {
 }
 
 div {
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .date-buttons {
@@ -465,7 +582,7 @@ div {
 }
 
 section {
-  margin-top: 40px;
+  margin-top: 25px;
   overflow-x: auto;
 }
 
@@ -505,6 +622,7 @@ tbody tr:last-child {
 td {
   padding: 12px;
   text-align: center;
+  font-size: 1.1em;
 }
 
 td:first-child {
@@ -617,7 +735,19 @@ td:first-child {
     width: 100%;
     margin: 5px 0;
     padding: 14px 20px;
-    font-size: 0.95em;
+    font-size: 1.05em;
+  }
+
+  .purpose-buttons {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #purposeTournament,
+  #purposeOther {
+    width: 100%;
+    max-width: 100%;
+    margin: 5px 0;
   }
 
   input[type="text"],
@@ -636,9 +766,19 @@ td:first-child {
     /* iOSでズームを防ぐ */
   }
 
+  .responsible-person-input {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   #responsiblePerson {
-    width: 200px;
-    max-width: 200px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .fill-button {
+    width: 100%;
+    margin-top: 5px;
   }
 
   #numberOfPeople {
@@ -665,22 +805,23 @@ td:first-child {
   }
 
   table {
-    font-size: 0.9em;
+    font-size: 1.0em;
     min-width: 100%;
   }
 
   th {
     padding: 12px 8px;
-    font-size: 0.95em;
+    font-size: 1.05em;
   }
 
   td {
     padding: 10px 8px;
+    font-size: 1.0em;
   }
 
   td:first-child {
     width: 120px;
-    font-size: 0.9em;
+    font-size: 1.0em;
   }
 
   .reservation-cell {
@@ -723,7 +864,7 @@ td:first-child {
   }
 
   .modal-content h2 {
-    font-size: 1.3em;
+    font-size: 1.5em;
   }
 
   .modal-buttons {
@@ -754,13 +895,13 @@ td:first-child {
   }
 
   .reservation-info p {
-    font-size: 0.9em;
+    font-size: 1.0em;
     margin: 0;
   }
 
   .reservation-info strong {
     margin-right: 5px;
-    font-size: 0.9em;
+    font-size: 1.0em;
   }
 
   .cancel-reservation-btn {
@@ -768,6 +909,22 @@ td:first-child {
     margin-left: 0;
     margin-top: 12px;
     padding: 10px;
+  }
+
+  .fee-card {
+    padding: 15px;
+    margin: 0 5px;
+  }
+
+  .fee-card-row {
+    font-size: 1.0em;
+    margin: 0 3px;
+  }
+
+  .fee-total {
+    font-size: 1.3em;
+    margin: 0 5px;
+    padding: 12px;
   }
 }
 
@@ -798,21 +955,22 @@ td:first-child {
   }
 
   table {
-    font-size: 0.85em;
+    font-size: 0.95em;
   }
 
   th {
     padding: 10px 6px;
-    font-size: 0.9em;
+    font-size: 1.0em;
   }
 
   td {
     padding: 8px 6px;
+    font-size: 0.95em;
   }
 
   td:first-child {
     width: 100px;
-    font-size: 0.85em;
+    font-size: 0.95em;
   }
 
   .reservation-cell {
@@ -829,5 +987,110 @@ td:first-child {
 
   .reservation-cell.confirmed::before {
     font-size: 18px;
+  }
+}
+
+/* ログインページのスタイル */
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.auth-form {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.1em;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.form-buttons button {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 1.1em;
+}
+
+.error-message {
+  margin-top: 15px;
+  padding: 12px;
+  background: #ffe4e4;
+  border: 1px solid #ff4444;
+  border-radius: 5px;
+  color: #cc0000;
+  font-size: 1em;
+}
+
+.user-info {
+  text-align: right;
+  padding: 10px 20px;
+  background: #f5f5f5;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 1em;
+  color: #333;
+}
+
+.user-display {
+  font-size: 1.1em;
+  padding: 10px 0;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .auth-form {
+    padding: 20px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .form-buttons button {
+    width: 100%;
   }
 }

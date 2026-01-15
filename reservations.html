@@ -20,7 +20,11 @@
     </div>
     <nav class="nav-menu" id="navMenu">
       <a href="index.html" class="nav-menu-link">予約入力に戻る</a>
+      <a href="#" class="nav-menu-link" id="logoutLink">ログアウト</a>
     </nav>
+    <div class="user-info" id="userInfo" style="display: none;">
+      <span id="userNameDisplay"></span>
+    </div>
   </header>
   <main>
     <h2>予約確認</h2>
@@ -29,6 +33,7 @@
       <!-- 予約一覧がここに表示されます -->
     </div>
   </main>
+  <script src="auth.js"></script>
   <script src="reservations.js"></script>
 </body>
 

@@ -1,5 +1,10 @@
 'use strict';
 
+// ログインチェック
+if (!isLoggedIn()) {
+  window.location.href = 'login.html';
+}
+
 // 予約状態を管理するオブジェクト
 // キー: "hour-court" (例: "8-A", "9-B")
 const reservations = {};
@@ -31,17 +36,42 @@ function saveReservationData() {
     }
   }
   
+  // 確認済みのセルごとに責任者情報を保存
+  const confirmedReservationsWithUser = {};
+  for (let i = 0; i < rows.length; i++) {
+    const hour = 8 + i;
+    const courtACell = rows[i].cells[1];
+    const courtBCell = rows[i].cells[2];
+    
+    if (courtACell && courtACell.classList.contains('confirmed')) {
+      const key = `${hour}-A`;
+      const storedUserId = courtACell.getAttribute('data-user-id');
+      confirmedReservationsWithUser[key] = {
+        userId: storedUserId || getCurrentUserId()
+      };
+    }
+    if (courtBCell && courtBCell.classList.contains('confirmed')) {
+      const key = `${hour}-B`;
+      const storedUserId = courtBCell.getAttribute('data-user-id');
+      confirmedReservationsWithUser[key] = {
+        userId: storedUserId || getCurrentUserId()
+      };
+    }
+  }
+  
   // 入力情報も保存
   const purposeTournament = document.getElementById('purposeTournament').classList.contains('selected');
   const purposeDetail = document.getElementById('purposeDetail').value;
-  const responsiblePerson = document.getElementById('responsiblePerson').value;
+  const currentUser = getLoggedInUser();
+  const responsiblePerson = currentUser ? currentUser.name : '';
   const numberOfPeople = document.getElementById('numberOfPeople').value;
   
   const reservationData = {
-    confirmedReservations: confirmedReservations,
+    confirmedReservations: confirmedReservationsWithUser,
     purpose: purposeTournament ? '大会' : '大会以外',
     purposeDetail: purposeDetail,
     responsiblePerson: responsiblePerson,
+    responsibleUserId: getCurrentUserId(),
     numberOfPeople: numberOfPeople
   };
   
@@ -56,6 +86,7 @@ function loadReservationData() {
   if (!savedData) {
     // データがない場合は初期化
     clearReservations();
+    updateFeeDisplay();
     return;
   }
   
@@ -71,7 +102,8 @@ function loadReservationData() {
     
     // 確認済みのセルを復元
     for (const key in reservationData.confirmedReservations) {
-      if (reservationData.confirmedReservations[key]) {
+      const reservation = reservationData.confirmedReservations[key];
+      if (reservation) {
         const [hour, court] = key.split('-');
         const rowIndex = parseInt(hour) - 8;
         const cellIndex = court === 'A' ? 1 : 2;
@@ -80,6 +112,10 @@ function loadReservationData() {
           const cell = rows[rowIndex].cells[cellIndex];
           cell.classList.add('confirmed');
           cell.classList.remove('reserved', 'available');
+          // ユーザーIDを保存
+          if (reservation.userId) {
+            cell.setAttribute('data-user-id', reservation.userId);
+          }
         }
       }
     }
@@ -87,9 +123,13 @@ function loadReservationData() {
     // 入力情報を復元（オプション）
     // 必要に応じて入力フィールドにも値を設定できます
     
+    // 料金を更新
+    updateFeeDisplay();
+    
   } catch (e) {
     console.error('予約データの読み込みに失敗しました:', e);
     clearReservations();
+    updateFeeDisplay();
   }
 }
 
@@ -117,6 +157,9 @@ function clearReservations() {
   for (const key in reservations) {
     delete reservations[key];
   }
+  
+  // 料金を更新
+  updateFeeDisplay();
 }
 
 // セルの表示を更新する関数
@@ -135,6 +178,108 @@ function updateCellDisplay(cell, hour, court) {
   }
 }
 
+// 料金を計算して表示する関数
+function updateFeeDisplay() {
+  const feeDisplay = document.getElementById('feeDisplay');
+  const cardsContainer = feeDisplay ? feeDisplay.querySelector('.fee-cards-container') : null;
+  const totalFeeElement = document.getElementById('totalFee');
+  const feeHeading = document.getElementById('feeHeading');
+  
+  if (!feeDisplay || !cardsContainer) return;
+  
+  // 選択された予約情報を取得（通常の選択）
+  const selectedReservations = getSelectedReservations();
+  
+  // 選択中の予約のみを使用（確認済みの予約は選択対象外のため除外）
+  const allReservations = [...selectedReservations];
+  
+  // ソート
+  allReservations.sort((a, b) => {
+    if (a.hour !== b.hour) return a.hour - b.hour;
+    return a.court.localeCompare(b.court);
+  });
+  
+  // カードコンテナをクリア
+  cardsContainer.innerHTML = '';
+  
+  // 予約が選択されていない場合は非表示
+  if (allReservations.length === 0) {
+    if (feeDisplay) {
+      feeDisplay.style.display = 'none';
+    }
+    if (feeHeading) {
+      feeHeading.style.display = 'none';
+    }
+    return;
+  }
+  
+  // 表示する
+  if (feeDisplay) {
+    feeDisplay.style.display = 'block';
+  }
+  if (feeHeading) {
+    feeHeading.style.display = 'block';
+  }
+  
+  let totalFee = 0;
+  const feePerHour = 500; // 1時間500円
+  
+  // コートごとに時間を集計
+  const courtSummary = {};
+  allReservations.forEach(res => {
+    if (!courtSummary[res.court]) {
+      courtSummary[res.court] = {
+        totalHours: 0
+      };
+    }
+    courtSummary[res.court].totalHours++;
+  });
+  
+  // コート名でソート（Aコート、Bコートの順）
+  const sortedCourts = Object.keys(courtSummary).sort();
+  
+  // コートごとの情報をHTMLで作成
+  let courtDetailsHTML = '';
+  sortedCourts.forEach(court => {
+    const summary = courtSummary[court];
+    const totalHours = summary.totalHours;
+    const fee = totalHours * feePerHour;
+    totalFee += fee;
+    
+    courtDetailsHTML += `
+      <div class="fee-court-detail">
+        <div class="fee-card-row">
+          <span class="fee-label">コート名:</span>
+          <span class="fee-value">${court}コート</span>
+        </div>
+        <div class="fee-card-row">
+          <span class="fee-label">時間:</span>
+          <span class="fee-value">${totalHours}時間</span>
+        </div>
+        <div class="fee-card-row">
+          <span class="fee-label">料金:</span>
+          <span class="fee-value">${fee.toLocaleString()}円</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  // 1枚のカードを作成（中にコートごとの情報を表示）
+  const card = document.createElement('div');
+  card.className = 'fee-card';
+  card.innerHTML = `
+    <div class="fee-card-content">
+      ${courtDetailsHTML}
+    </div>
+  `;
+  cardsContainer.appendChild(card);
+  
+  // 合計料金を更新
+  if (totalFeeElement) {
+    totalFeeElement.textContent = totalFee.toLocaleString();
+  }
+}
+
 // セルのクリックイベントハンドラ
 function handleCellClick(hour, court) {
   const key = `${hour}-${court}`;
@@ -146,22 +291,16 @@ function handleCellClick(hour, court) {
   if (rows[rowIndex]) {
     const cell = rows[rowIndex].cells[cellIndex];
     
-    // 確認済みのセルの場合はキャンセル処理
+    // 確認済みのセルの場合は何もしない（キャンセル不可）
     if (cell.classList.contains('confirmed')) {
-      if (confirm('この予約をキャンセルしますか？')) {
-        cell.classList.remove('confirmed');
-        cell.classList.add('available');
-        reservations[key] = false;
-        
-        // localStorageから削除
-        saveReservationData();
-      }
       return;
     }
     
     // 通常の予約状態を切り替え
     reservations[key] = !reservations[key];
     updateCellDisplay(cell, hour, court);
+    // 料金を更新
+    updateFeeDisplay();
   }
 }
 
@@ -310,11 +449,11 @@ function validateRequiredFields() {
     return false;
   }
 
-  // 使用責任者のチェック
-  const responsiblePerson = document.getElementById('responsiblePerson').value.trim();
-  if (!responsiblePerson) {
-    alert('使用責任者を入力してください。');
-    document.getElementById('responsiblePerson').focus();
+  // 使用責任者のチェック（ログインユーザーを使用）
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+    alert('ログインが必要です。');
+    window.location.href = 'login.html';
     return false;
   }
 
@@ -351,6 +490,7 @@ function getSelectedReservations() {
 function updateConfirmedCells() {
   const tableBody = document.getElementById('tableBody');
   const rows = tableBody.querySelectorAll('tr');
+  const currentUserId = getCurrentUserId();
   
   for (const key in reservations) {
     if (reservations[key]) {
@@ -362,6 +502,8 @@ function updateConfirmedCells() {
         const cell = rows[rowIndex].cells[cellIndex];
         cell.classList.add('confirmed');
         cell.classList.remove('reserved', 'available');
+        // ユーザーIDを保存
+        cell.setAttribute('data-user-id', currentUserId);
       }
     }
   }
@@ -393,7 +535,7 @@ function showConfirmation() {
   const purpose = purposeTournament ? '大会' : '大会以外';
   const purposeDetail = document.getElementById('purposeDetail').value;
   const date = document.getElementById('clander').value;
-  const responsiblePerson = document.getElementById('responsiblePerson').value;
+  const responsiblePerson = document.getElementById('responsiblePerson').value.trim();
   const numberOfPeople = document.getElementById('numberOfPeople').value;
 
   // 日付をフォーマット
@@ -466,8 +608,46 @@ function setupHamburgerMenu() {
   }
 }
 
+// ユーザー情報を表示
+function displayUserInfo() {
+  const currentUser = getLoggedInUser();
+  const userInfoDiv = document.getElementById('userInfo');
+  
+  if (currentUser && userInfoDiv) {
+    userInfoDiv.style.display = 'block';
+    document.getElementById('userNameDisplay').textContent = `ログイン中: ${currentUser.name}`;
+  }
+}
+
+// 使用責任者名を入力欄に反映
+function fillResponsiblePerson() {
+  const currentUser = getLoggedInUser();
+  const responsiblePersonInput = document.getElementById('responsiblePerson');
+  
+  if (currentUser && responsiblePersonInput) {
+    responsiblePersonInput.value = currentUser.name;
+  }
+}
+
+// ログアウト処理
+function handleLogout() {
+  if (confirm('ログアウトしますか？')) {
+    logout();
+    window.location.href = 'login.html';
+  }
+}
+
 // ページ読み込み時にテーブルを生成し、今日の日付を設定
 document.addEventListener('DOMContentLoaded', () => {
+  // ログインチェック
+  if (!isLoggedIn()) {
+    window.location.href = 'login.html';
+    return;
+  }
+  
+  // ユーザー情報を表示
+  displayUserInfo();
+  
   createReservationTable();
   setTodayDate();
   setupDatePicker();
@@ -476,6 +656,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 現在の日付の予約データを読み込み
   loadReservationData();
+  
+  // 初期状態で料金表示を非表示
+  updateFeeDisplay();
 
   // 前の日ボタンのイベントリスナー
   const prevDayButton = document.getElementById('prevDay');
@@ -515,5 +698,20 @@ document.addEventListener('DOMContentLoaded', () => {
         closeConfirmation();
       }
     });
+  }
+
+  // ログアウトリンク
+  const logoutLink = document.getElementById('logoutLink');
+  if (logoutLink) {
+    logoutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleLogout();
+    });
+  }
+
+  // 登録者反映ボタン
+  const fillButton = document.getElementById('fillResponsiblePerson');
+  if (fillButton) {
+    fillButton.addEventListener('click', fillResponsiblePerson);
   }
 });
